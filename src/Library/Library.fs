@@ -20,15 +20,15 @@ module Domain =
         | ``Three' -> Five'``
 
     type DnaStrand = {
-        Directionality: StrandDirection
+        Direction: StrandDirection
         Nucleotides: Nucleotide list
     }
 
     module DnaStrand =
         let complement strand =
-            match strand.Directionality with
-            | ``Five' -> Three'`` -> { Directionality = ``Three' -> Five'``; Nucleotides = List.rev strand.Nucleotides } 
-            | ``Three' -> Five'`` -> {  Directionality = ``Five' -> Three'`` ; Nucleotides = List.rev strand.Nucleotides } 
+            match strand.Direction with
+            | ``Five' -> Three'`` -> { Direction = ``Three' -> Five'``; Nucleotides = List.rev strand.Nucleotides } 
+            | ``Three' -> Five'`` -> {  Direction = ``Five' -> Three'`` ; Nucleotides = List.rev strand.Nucleotides } 
     
 module Input =
     open Domain
