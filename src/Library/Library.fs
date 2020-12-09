@@ -14,7 +14,6 @@ module Domain =
             | Thymine -> Adenine
             | Cytosine -> Guanine
             | Guanine -> Cytosine
-    
 
     type StrandDirection = 
         | ``Five' -> Three'``
