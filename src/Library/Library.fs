@@ -21,14 +21,18 @@ module Domain =
 
     type DnaStrand = {
         Direction: StrandDirection
-        Nucleotides: Nucleotide list
+        FirstNucleotide: Nucleotide // ensure at least one nucleotide exists in strand
+        RestNucleotides: Nucleotide list
     }
 
     module DnaStrand =
         let complement strand =
+            let reversedNucleotides = strand.FirstNucleotide :: strand.RestNucleotides |> List.rev
+            let (firstNucleotide :: restNucleotides) = reversedNucleotides
+
             match strand.Direction with
-            | ``Five' -> Three'`` -> { Direction = ``Three' -> Five'``; Nucleotides = List.rev strand.Nucleotides } 
-            | ``Three' -> Five'`` -> {  Direction = ``Five' -> Three'`` ; Nucleotides = List.rev strand.Nucleotides } 
+            | ``Five' -> Three'`` -> { Direction = ``Three' -> Five'``; FirstNucleotide = firstNucleotide; RestNucleotides = restNucleotides } 
+            | ``Three' -> Five'`` -> {  Direction = ``Five' -> Three'``; FirstNucleotide = firstNucleotide; RestNucleotides = restNucleotides } 
     
 module Input =
     open Domain

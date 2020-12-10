@@ -16,11 +16,18 @@ let randomStrandDirection =
 
 let randomDnaStrand = 
     gen {
+        let! firstNucleotide = randomNucleotide
         let! nucleotides = Gen.listOf randomNucleotide
         let! strandDirection = randomStrandDirection
 
         return {
             Direction = strandDirection
-            Nucleotides = nucleotides
+            FirstNucleotide = firstNucleotide
+            RestNucleotides = nucleotides
         }
     }
+
+type DnaStrandGenerator =
+    static member DnaStrand() = Arb.fromGen randomDnaStrand
+
+Arb.register<DnaStrandGenerator>()
