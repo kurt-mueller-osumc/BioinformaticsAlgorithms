@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace BioinformaticsAlgorithms.Core
 
 type Nucleotide =
     | Adenine
@@ -7,13 +7,13 @@ type Nucleotide =
     | Thymine
 
     /// Create a nucleotide from a character
-    static member Create (input: char) =
-        match input with
+    static member Create (code: char) =
+        match code with
         | 'A' | 'a' -> Ok Adenine
         | 'C' | 'c' -> Ok Cytosine
         | 'G' | 'g' -> Ok Guanine
         | 'T' | 't' -> Ok Thymine
-        | _ -> Error "Invalid nucleotide: {input}"
+        | _ -> Error "Invalid nucleotide: {code}"
 
     member this.Char =
         match this with
@@ -29,7 +29,12 @@ type Nucleotide =
         | Guanine -> Cytosine
         | Thymine -> Adenine
 
-type Nucleotides = Nucleotides of Nucleotide list
+type Nucleotides =
+    | Nucleotides of Nucleotide list
+
+    static member Create (codes: char list) =
+        codes
+        |> List.map Nucleotide.Create
 
 module ReplicationOrigin =
     let foo = "bar"
