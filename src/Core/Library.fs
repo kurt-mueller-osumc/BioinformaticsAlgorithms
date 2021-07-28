@@ -29,12 +29,17 @@ type Nucleotide =
         | Guanine -> Cytosine
         | Thymine -> Adenine
 
+open Utilities
+
 type Nucleotides =
     | Nucleotides of Nucleotide list
 
+    /// Create nucleotides from a list of characters
     static member Create (codes: char list) =
         codes
         |> List.map Nucleotide.Create
+        |> Results.combine
+        |> Result.map Nucleotides
 
 module ReplicationOrigin =
     let foo = "bar"
