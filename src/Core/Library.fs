@@ -22,6 +22,13 @@ type Nucleotide =
         | Guanine  -> 'G'
         | Thymine  -> 'T'
 
+    member this.Complement =
+        match this with
+        | Adenine -> Thymine
+        | Cytosine -> Guanine
+        | Guanine -> Cytosine
+        | Thymine -> Adenine
+
 type Nucleotides = Nucleotides of Nucleotide list
 
 module ReplicationOrigin =
