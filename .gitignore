@@ -59,6 +59,20 @@ release/templates
 release/schemas
 release_test/bin
 
+tests/**/bin/
+tests/**/obj/
+*.userprefs
+tests/paket/bin/paket.exe
+tests/core/lib/core.js
+tests/paket/lib/paket.js
+*ncrunch*
+tests/core/README.md
+tests/atom-fsharp/lib/
+tests/fsharp/lib/fsharp.js
+tests/atom-fsharp/lib/fsharp.js
+/temp/release
+tests/atom-fsharp/bin-fantomas/
+
 temp
 .vs
 *.js
