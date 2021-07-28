@@ -1,30 +1,26 @@
 ﻿namespace Core
 
-module Say =
-    let hello name =
-        printfn "Hello %s" name
-
 type Nucleotide =
-    | A
-    | C
-    | G
-    | T
+    | Adenine
+    | Cytosine
+    | Guanine
+    | Thymine
 
     /// Create a nucleotide from a character
     static member Create (input: char) =
         match input with
-        | 'A' | 'a' -> Ok A
-        | 'C' | 'c' -> Ok C
-        | 'G' | 'g' -> Ok G
-        | 'T' | 't' -> Ok T
+        | 'A' | 'a' -> Ok Adenine
+        | 'C' | 'c' -> Ok Cytosine
+        | 'G' | 'g' -> Ok Guanine
+        | 'T' | 't' -> Ok Thymine
         | _ -> Error "Invalid nucleotide: {input}"
 
     member this.Char =
         match this with
-        | A -> 'A'
-        | C -> 'C'
-        | G -> 'G'
-        | T -> 'T'
+        | Adenine  -> 'A'
+        | Cytosine -> 'C'
+        | Guanine  -> 'G'
+        | Thymine  -> 'T'
 
 type Nucleotides = Nucleotides of Nucleotide list
 
