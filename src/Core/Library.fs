@@ -41,5 +41,9 @@ type Nucleotides =
         |> Results.combine
         |> Result.map Nucleotides
 
-module ReplicationOrigin =
-    let foo = "bar"
+    member this.Complement =
+        let (Nucleotides codes) = this
+
+        codes
+        |> List.map (fun code -> code.Complement)
+        |> Nucleotides
