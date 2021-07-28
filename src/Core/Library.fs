@@ -41,9 +41,21 @@ type Nucleotides =
         |> Results.combine
         |> Result.map Nucleotides
 
-    member this.Complement =
-        let (Nucleotides codes) = this
+    member this.Codes = this |> (fun (Nucleotides codes) -> codes)
 
-        codes
+    member this.Length = this.Codes.Length
+
+    member this.Complement =
+        this.Codes
         |> List.map (fun code -> code.Complement)
         |> Nucleotides
+
+    member this.Chars =
+        this.Codes
+        |> List.map (fun code -> code.Char)
+
+    member this.Count(kmer: Nucleotides) =
+        this.Codes
+        |> List.windowed kmer.Length
+        |> List.filter (fun window -> window = kmer.Codes)
+        |> List.length
