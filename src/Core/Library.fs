@@ -13,7 +13,7 @@ type Nucleotide =
         | 'C' | 'c' -> Ok Cytosine
         | 'G' | 'g' -> Ok Guanine
         | 'T' | 't' -> Ok Thymine
-        | _ -> Error "Invalid nucleotide: {code}"
+        | _ -> Error $"Invalid nucleotide: {code}"
 
     member this.Char =
         match this with
