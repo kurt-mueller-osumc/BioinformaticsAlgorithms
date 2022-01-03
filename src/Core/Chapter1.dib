@@ -1,0 +1,53 @@
+#!markdown
+
+# Chapter 1
+
+#!markdown
+
+## Lesson 1.2
+
+#!markdown
+
+### Counting Words
+
+#!fsharp
+
+let count (nucleotides: string) (kmer: string) =
+    nucleotides.ToCharArray()
+    |> Array.windowed kmer.Length
+    |> Array.filter (fun window ->
+        window = kmer.ToCharArray()
+    )
+    |> Array.length
+
+count "ACAACTATGCATACTATCGGGAACTATCCT" "ACTAT"
+
+#!markdown
+
+### Frequent Words
+
+#!fsharp
+
+let frequentWords (nucleotides: string) (k: uint) =
+    let (frequencyMap: Map<string, uint>) = Map []
+
+    nucleotides.ToCharArray()
+    |> Array.map string
+    |> Array.windowed (int k)
+    |> Array.map (String.concat "")
+    |> Array.fold(fun (freq: Map<string, uint>) kmer ->
+        freq.Change(kmer, (fun maybeCount ->
+            match maybeCount with
+            | Some count -> Some (count + 1u)
+            | None -> Some 1u
+        ))
+    ) frequencyMap
+    |> Map.toSeq
+    |> Seq.reduce (fun (kmer1, count1) (kmer2, count2) ->
+        if count1 >= count2 then
+            (kmer1, count1)
+        else (kmer2, count2)
+    )
+
+
+frequentWords "ACAACTATGCATACTATCGGGAACTATCCT" 5u
