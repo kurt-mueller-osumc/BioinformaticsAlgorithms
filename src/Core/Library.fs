@@ -80,12 +80,12 @@ type Nucleotides =
         |> List.filter (fun window -> window = kmer.Codes)
         |> List.length
 
-    member this.KmerFrequencies(length: uint) : (Nucleotide list * int) list =
+    member this.KmerFrequencies(length: uint) : (Nucleotides * int) list =
         this.Codes
         |> List.windowed (int length)
         |> List.groupBy(fun kmer -> id kmer)
-        |> List.map(fun (key, vals) -> (key, List.length vals))
+        |> List.map(fun (nucleotides, vals) -> ((Nucleotides nucleotides), List.length vals))
 
-    member this.MostFrequentKmer(length: uint) : (Nucleotide list * int) =
+    member this.MostFrequentKmer(length: uint) : (Nucleotides * int) =
         this.KmerFrequencies(length)
         |> List.maxBy(fun (_, count) -> count)
