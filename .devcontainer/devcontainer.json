@@ -21,7 +21,8 @@
                 "Ionide.Ionide-fsharp",
                 "ms-dotnettools.csharp",
                 "shardulm94.trailing-spaces",
-                "ms-dotnettools.dotnet-interactive-vscode"
+                "ms-dotnettools.dotnet-interactive-vscode",
+                "ms-azuretools.vscode-docker"
         ],
 
         // Use 'forwardPorts' to make a list of ports inside the container available locally.
