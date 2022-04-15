@@ -10,8 +10,8 @@ module Utilities =
             results
             |> List.fold (fun aggregate result ->
                 match result with
-                | Ok ok -> aggregate |> Result.map (fun oks -> ok :: oks)
-                | Error err -> aggregate |> Result.mapError (fun errs -> err :: errs)
+                | Ok ok -> aggregate |> Result.map (fun oks -> oks @ [ok])
+                | Error err -> aggregate |> Result.mapError (fun errs -> errs @ [err])
             ) initial
 
         /// Partition a list of results into a tuple of oks and errors
