@@ -4,14 +4,14 @@ module Utilities =
     [<RequireQualifiedAccess>]
     module Results =
         /// Combine a list of results into a single result that contains either all the valid elements or a list of errors
-        let combine (results: Result<'ok, 'error> list) : Result<'ok list, 'error list> =
-            let initial : Result<'ok list, 'error list> = Ok List.empty
+        let combine (results: Result<'ok, 'error> seq) : Result<'ok seq, 'error seq> =
+            let initial : Result<'ok seq, 'error seq> = Ok Seq.empty
 
             results
-            |> List.fold (fun aggregate result ->
+            |> Seq.fold (fun aggregate result ->
                 match result with
-                | Ok ok -> aggregate |> Result.map (fun oks -> oks @ [ok])
-                | Error err -> aggregate |> Result.mapError (fun errs -> errs @ [err])
+                | Ok ok -> aggregate |> Result.map (fun oks -> Seq.append oks (Seq.singleton ok))
+                | Error err -> aggregate |> Result.mapError (fun errs -> Seq.append errs (Seq.singleton err))
             ) initial
 
         /// Partition a list of results into a tuple of oks and errors

@@ -38,12 +38,12 @@ type Nucleotide =
 open Utilities
 
 type Nucleotides =
-    | Nucleotides of Nucleotide list
+    | Nucleotides of Nucleotide seq
 
     /// Try to create nucleotides from a list of characters
-    static member TryCreate (codes: char list) : Result<Nucleotides, string list> =
+    static member TryCreate (codes: char seq) : Result<Nucleotides, string seq> =
         codes
-        |> List.map Nucleotide.TryCreate
+        |> Seq.map Nucleotide.TryCreate
         |> Results.combine
         |> Result.map Nucleotides
 
@@ -58,34 +58,34 @@ type Nucleotides =
         |> Array.toList
         |> Nucleotides.Create
 
-    member this.Codes : Nucleotide list =
+    member this.Codes : Nucleotide seq =
         this |> (fun (Nucleotides codes) -> codes)
 
     member this.Length : int =
-        this.Codes.Length
+        Seq.length this.Codes
 
     member this.Complement : Nucleotides =
         this.Codes
-        |> List.map (fun code -> code.Complement)
+        |> Seq.map (fun code -> code.Complement)
         |> Nucleotides
 
-    member this.Chars : char list =
+    member this.Chars : char seq =
         this.Codes
-        |> List.map (fun code -> code.Char)
+        |> Seq.map (fun code -> code.Char)
 
     // Count the # of times that `kmer` appears in the string of nucleotides
     member this.Count(kmer: Nucleotides) : int =
         this.Codes
-        |> List.windowed kmer.Length
-        |> List.filter (fun window -> window = kmer.Codes)
-        |> List.length
+        |> Seq.windowed kmer.Length
+        |> Seq.filter (fun window -> (Array.toSeq window) = kmer.Codes)
+        |> Seq.length
 
-    member this.KmerFrequencies(length: uint) : (Nucleotides * int) list =
+    member this.KmerFrequencies(length: uint) : (Nucleotides * int) seq =
         this.Codes
-        |> List.windowed (int length)
-        |> List.groupBy(fun kmer -> id kmer)
-        |> List.map(fun (nucleotides, vals) -> ((Nucleotides nucleotides), List.length vals))
+        |> Seq.windowed (int length)
+        |> Seq.groupBy id
+        |> Seq.map(fun (nucleotides, vals) -> ((Nucleotides (Array.toSeq nucleotides)), Seq.length vals))
 
     member this.MostFrequentKmer(length: uint) : (Nucleotides * int) =
         this.KmerFrequencies(length)
-        |> List.maxBy(fun (_, count) -> count)
+        |> Seq.maxBy(fun (_, count) -> count)
