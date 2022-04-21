@@ -28,6 +28,13 @@ type Nucleotide =
         | Guanine  -> 'G'
         | Thymine  -> 'T'
 
+    member this.Text : string =
+        match this with
+        | Adenine  -> "A"
+        | Cytosine -> "C"
+        | Guanine  -> "G"
+        | Thymine  -> "T"
+
     member this.Complement : Nucleotide =
         match this with
         | Adenine -> Thymine
@@ -37,8 +44,26 @@ type Nucleotide =
 
 open Utilities
 
+[<CustomEquality; CustomComparison>]
 type Nucleotides =
     | Nucleotides of Nucleotide seq
+
+    interface System.IComparable with
+        member this.CompareTo other =
+            match other with
+            | :? Nucleotides as p -> this.Text.CompareTo(p.Text)
+            | _ -> -1
+
+    interface System.IComparable<Nucleotides> with
+        member this.CompareTo (other: Nucleotides) =
+            compare this.Text other.Text
+
+    override this.Equals (other) =
+        match other with
+        | :? Nucleotides as p -> this.Text = p.Text
+        | _ -> false
+
+    override this.GetHashCode() = this.Text.GetHashCode()
 
     /// Try to create nucleotides from a list of characters
     static member TryCreate (codes: char seq) : Result<Nucleotides, string seq> =
@@ -66,12 +91,18 @@ type Nucleotides =
 
     member this.Complement : Nucleotides =
         this.Codes
+        |> Seq.rev
         |> Seq.map (fun code -> code.Complement)
         |> Nucleotides
 
     member this.Chars : char seq =
         this.Codes
         |> Seq.map (fun code -> code.Char)
+
+    member this.Text : string =
+        this.Codes
+        |> Seq.map (fun code -> code.Text)
+        |> Seq.reduce (+)
 
     // Count the # of times that `kmer` appears in the string of nucleotides
     member this.Count(kmer: Nucleotides) : int =
@@ -89,3 +120,16 @@ type Nucleotides =
     member this.MostFrequentKmer(length: uint) : (Nucleotides * int) =
         this.KmerFrequencies(length)
         |> Seq.maxBy(fun (_, count) -> count)
+
+    // k, L, t
+    // Find clumps of a size `clumpSize` that appear in the intervals of `intervalLength` in at least `numberOfAppearances`
+    member this.FindClumps(clumpSize: uint, intervalLength: uint, numberOfAppearances: uint) =
+        this.Codes
+        |> Seq.windowed (int intervalLength)
+        |> Seq.map (Array.toSeq >> Nucleotides)
+        |> Seq.collect (fun nucleotides ->
+            nucleotides.KmerFrequencies(clumpSize)
+        )
+        |> Seq.filter(fun (_, count) -> count >= int numberOfAppearances)
+        |> Seq.map fst
+        |> Set.ofSeq
