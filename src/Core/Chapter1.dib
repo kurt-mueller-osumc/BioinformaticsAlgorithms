@@ -1,10 +1,14 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
 #!markdown
 
-# Chapter 1
+# Chapter 1 - Where in the Genome Does DNA Replication Begin?
 
 #!markdown
 
-## Lesson 1.2
+## Lesson 1.2 - Hidden messages in the replication origin
 
 #!markdown
 
@@ -12,6 +16,7 @@
 
 #!fsharp
 
+/// Count the # of times that a k-mer (a string of length k) appears in a string of nucleotides.
 let count (nucleotides: string) (kmer: string) =
     nucleotides.ToCharArray()
     |> Array.windowed kmer.Length
@@ -20,7 +25,16 @@ let count (nucleotides: string) (kmer: string) =
     )
     |> Array.length
 
-count "ACAACTATGCATACTATCGGGAACTATCCT" "ACTAT"
+// count "ACAACTATGCATACTATCGGGAACTATCCT" "ACTAT"
+count "CGATATATCCATAG" "ATA"
+
+#!markdown
+
+The `count` function makes use of the `Array.windowed` library function, which takes a sequence of elements and creates smaller sub-sequences (or "windows") of a specified size.
+
+#!fsharp
+
+Array.windowed 3 [|1 .. 5|]
 
 #!markdown
 
@@ -28,22 +42,30 @@ count "ACAACTATGCATACTATCGGGAACTATCCT" "ACTAT"
 
 #!fsharp
 
+/// Find the most frequent k-length pattern in the `nucleotides` string
 let frequentWords (nucleotides: string) (k: uint) =
-    let (frequencyMap: Map<string, uint>) = Map []
+    // separate nucleotides into kmer substrings of size k
+    let (kmers: string array) =
+        nucleotides.ToCharArray()
+        |> Array.map string
+        |> Array.windowed (int k)
+        |> Array.map (String.concat "")
 
-    nucleotides.ToCharArray()
-    |> Array.map string
-    |> Array.windowed (int k)
-    |> Array.map (String.concat "")
-    |> Array.fold(fun (freq: Map<string, uint>) kmer ->
-        freq.Change(kmer, (fun maybeCount ->
-            match maybeCount with
+    // create a map where keys are kmers of length 'k' the values are the # of times those kmers are found in the 'nucleotides' string
+    let kmerFrequencies: Map<string, uint> =
+        kmers
+        |> Array.fold (fun (freq: Map<string, uint>) kmer ->
+            // if the kmer already exists, bump the count by 1; if it doesn't, start the count at 1
+            freq.Change (kmer, (function
             | Some count -> Some (count + 1u)
             | None -> Some 1u
         ))
-    ) frequencyMap
-    |> Map.toSeq
-    |> Seq.reduce (fun (kmer1, count1) (kmer2, count2) ->
+        ) Map.empty
+
+    // find the most frequent kmer by iterating through pairs of kmers & their counts. keep the kmer that higher count.
+    kmerFrequencies
+    |> Map.toArray
+    |> Array.reduce (fun (kmer1, count1) (kmer2, count2) ->
         if count1 >= count2 then
             (kmer1, count1)
         else (kmer2, count2)
