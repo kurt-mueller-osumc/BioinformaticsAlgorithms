@@ -51,7 +51,7 @@ let frequentWords (nucleotides: string) (k: uint) =
         |> Array.windowed (int k)
         |> Array.map (String.concat "")
 
-    // create a map where keys are kmers of length 'k' the values are the # of times those kmers are found in the 'nucleotides' string
+    // create a map where keys are kmers of length 'k' & the values are the # of times those kmers are found in the 'nucleotides' string
     let kmerFrequencies: Map<string, uint> =
         kmers
         |> Array.fold (fun (freq: Map<string, uint>) kmer ->
