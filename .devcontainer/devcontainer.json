@@ -12,18 +12,18 @@
                         "UPGRADE_PACKAGES": "false"
                 }
         },
-
-        // Set *default* container specific settings.json values on container create.
-        "settings": {},
-
-        // Add the IDs of extensions you want installed when the container is created.
-        "extensions": [
-                "Ionide.Ionide-fsharp",
-                "ms-dotnettools.csharp",
-                "shardulm94.trailing-spaces",
-                "ms-dotnettools.dotnet-interactive-vscode",
-                "ms-azuretools.vscode-docker"
-        ],
+        "customizations": {
+                // Set *default* container specific settings.json values on container create.
+                "settings": {},
+                // Add the IDs of extensions you want installed when the container is created.
+                "extensions": [
+                        "Ionide.Ionide-fsharp",
+                        "ms-dotnettools.csharp",
+                        "shardulm94.trailing-spaces",
+                        "ms-dotnettools.dotnet-interactive-vscode",
+                        "ms-azuretools.vscode-docker"
+                ],
+        },
 
         // Use 'forwardPorts' to make a list of ports inside the container available locally.
         // "forwardPorts": [],
