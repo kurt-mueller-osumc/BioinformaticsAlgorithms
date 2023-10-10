@@ -3,7 +3,7 @@
 {
         "name": "F# (.NET)",
         "build": {
-                "dockerfile": "Dockerfile",
+                "dockerfile": "../Dockerfile",
                 "args": {
                         // Options
                         "INSTALL_NODE": "false",
